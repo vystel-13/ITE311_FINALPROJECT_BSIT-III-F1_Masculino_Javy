@@ -145,8 +145,32 @@ function toggleUnit() {
   unit.value = unit.value === 'kg' ? 'lb' : 'kg'
 }
 
+function exportCsv() {
+  const header = ['Date', 'Exercise', 'Muscle', 'Sets', 'Reps', `Weight (${unit.value})`, `Volume (${unit.value})`]
+  const rows = workouts.value.map((w) => [
+    w.date,
+    w.exercise,
+    w.muscle,
+    w.sets,
+    w.reps,
+    Math.round(w.weight * factor.value * 10) / 10,
+    Math.round(volumeOf(w) * factor.value),
+  ])
+
+  // Wrap every cell in quotes so commas and quotes inside text are safe
+  const csv = [header, ...rows]
+    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = 'workout-log.csv'
+  link.click()
+  URL.revokeObjectURL(link.href)
+}
+
 function clearAll() {
-  if (confirm('Remove all workouts?')) workouts.value = []
 }
 
 /* ---------- WATCHERS ---------- */
@@ -180,7 +204,10 @@ watch(toast, (message) => {
         <!-- INTERPOLATION -->
         <p>{{ workouts.length }} exercise{{ workouts.length === 1 ? '' : 's' }} logged</p>
       </div>
-      <button class="btn btn--ghost" @click="toggleUnit">Units: {{ unit }}</button>
+            <div class="head__actions">
+        <button class="btn btn--ghost" @click="exportCsv">Export CSV</button>
+        <button class="btn btn--ghost" @click="toggleUnit">Units: {{ unit }}</button>
+      </div>
     </header>
 
     <!-- v-show: toggles CSS display, element stays in the DOM -->
@@ -338,6 +365,7 @@ input.invalid { border-color: var(--red); background: #fff6f5; }
 .btn--ghost:hover { background: var(--ink); color: #fff; }
 .goal { display: flex; align-items: center; gap: 8px; font-size: .85rem; }
 .goal input { width: 110px; }
+.head__actions { display: flex; gap: 8px; }
 .meter { height: 12px; background: #e3e7ec; margin: 6px 0; }
 .meter__fill { height: 100%; transition: width .4s; }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
