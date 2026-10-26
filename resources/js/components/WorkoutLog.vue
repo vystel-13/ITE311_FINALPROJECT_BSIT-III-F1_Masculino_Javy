@@ -23,6 +23,7 @@ const unit = ref(load('unit', 'kg'))
 const goalKg = ref(load('goalKg', 10000))
 const showForm = ref(true)
 const filterMuscle = ref('All')
+const searchText = ref('')
 const toast = ref('')
 
 /* ---------- REACTIVE DATA + OBJECTS ---------- */
@@ -43,12 +44,13 @@ const goalDisplay = computed({
 
 const volumeOf = (w) => w.sets * w.reps * w.weight // in kg
 
-const filteredWorkouts = computed(() =>
-  (filterMuscle.value === 'All'
-    ? [...workouts.value]
-    : workouts.value.filter((w) => w.muscle === filterMuscle.value)
-  ).reverse() // newest first
-)
+const filteredWorkouts = computed(() => {
+  const term = searchText.value.trim().toLowerCase()
+  return workouts.value
+    .filter((w) => filterMuscle.value === 'All' || w.muscle === filterMuscle.value)
+    .filter((w) => w.exercise.toLowerCase().includes(term))
+    .reverse() // newest first
+})
 
 // Personal best = heaviest weight logged for each exercise
 const pbIds = computed(() => {
@@ -282,7 +284,8 @@ watch(toast, (message) => {
     <section class="panel">
       <div class="panel__top">
         <h2>Workouts</h2>
-        <div class="filters">
+                <div class="filters">
+          <input v-model="searchText" type="search" class="search" placeholder="Search exercise..." aria-label="Search exercises" />
           <select v-model="filterMuscle" aria-label="Filter by muscle group">
             <option>All</option>
             <option v-for="m in muscles" :key="m">{{ m }}</option>
@@ -347,6 +350,7 @@ input.invalid { border-color: var(--red); background: #fff6f5; }
 .break__num { text-align: right; color: #5a6472; }
 .list { list-style: none; margin: 0; padding: 0; border: 1px solid #dfe3e8; }
 .filters { display: flex; gap: 8px; }
+.search { width: 170px; }
 .hint { color: #5a6472; margin: 8px 0 0; }
 .toast { background: #dff3e9; color: #1f5b41; padding: 8px 12px; margin: 0 0 16px; }
 @media (max-width: 760px) { .form { grid-template-columns: 1fr 1fr; } }
