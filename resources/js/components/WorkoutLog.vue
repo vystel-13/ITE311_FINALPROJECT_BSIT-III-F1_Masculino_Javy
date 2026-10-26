@@ -27,7 +27,7 @@ const searchText = ref('')
 const toast = ref('')
 
 /* ---------- REACTIVE DATA + OBJECTS ---------- */
-const form = reactive({ exercise: '', muscle: 'Chest', sets: '', reps: '', weight: '' })
+const form = reactive({ exercise: '', muscle: 'Chest', sets: '', reps: '', weight: '', notes: '' })
 const errors = reactive({ exercise: '', sets: '', reps: '', weight: '' })
 
 /* ---------- COMPUTED / REACTIVE CALCULATIONS ---------- */
@@ -122,6 +122,7 @@ function addWorkout() {
     sets: Number(form.sets),
     reps: Number(form.reps),
     weight: Math.round((Number(form.weight) / factor.value) * 100) / 100, // store in kg
+        notes: form.notes.trim(),
     date: new Date().toLocaleDateString(),
   })
 
@@ -129,7 +130,8 @@ function addWorkout() {
   form.exercise = ''
   form.sets = ''
   form.reps = ''
-  form.weight = ''
+    form.weight = ''
+  form.notes = ''
 }
 
 function removeWorkout(id) {
@@ -237,6 +239,11 @@ watch(toast, (message) => {
           <small v-if="errors.weight" class="error">{{ errors.weight }}</small>
         </label>
 
+                <label class="wide">
+          Notes (optional)
+          <input v-model="form.notes" type="text" maxlength="80" placeholder="e.g. felt strong, slow tempo" />
+        </label>
+
         <button class="btn btn--solid" type="submit">Add exercise</button>
       </form>
       <p v-else class="hint">The form is hidden. Select "Show form" to log another exercise.</p>
@@ -339,6 +346,7 @@ body { margin: 0; background: var(--paper); color: #1c232b;
 input, select { padding: 8px; border: 1px solid #b9c0ca; border-radius: 4px; font: inherit; }
 input.invalid { border-color: var(--red); background: #fff6f5; }
 .error { color: var(--red); }
+.form input[maxlength] { width: 100%; box-sizing: border-box; }
 .btn { cursor: pointer; border: 1px solid var(--ink); background: #fff; color: var(--ink);
        padding: 8px 14px; border-radius: 4px; font: inherit; }
 .btn--solid { background: var(--accent); border-color: var(--accent); color: #fff; align-self: end; }

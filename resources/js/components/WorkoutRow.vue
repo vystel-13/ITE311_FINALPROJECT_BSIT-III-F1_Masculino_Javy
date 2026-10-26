@@ -26,7 +26,9 @@ function remove() {
   <li class="row" :class="{ 'row--pb': isPb }">
     <div class="row__main">
       <strong>{{ workout.exercise }}</strong>
-      <span class="row__sub">{{ workout.muscle }} · {{ workout.date }}</span>
+            <span class="row__sub">{{ workout.muscle }} · {{ workout.date }}</span>
+      <!-- v-if: only show the note when one was entered -->
+      <span v-if="workout.notes" class="row__note">“{{ workout.notes }}”</span>
     </div>
 
     <span class="row__cell">{{ workout.sets }} × {{ workout.reps }}</span>
@@ -47,6 +49,7 @@ function remove() {
        align-items: center; padding: 10px 12px; border-bottom: 1px solid #dfe3e8; background: #fff; }
 .row--pb { background: #fff8e1; box-shadow: inset 4px 0 0 var(--gold); }
 .row__sub { display: block; font-size: .78rem; color: #5a6472; }
+.row__note { display: block; font-size: .8rem; font-style: italic; color: #3d4753; margin-top: 2px; }
 .row__cell { font-size: .92rem; }
 .row__vol { font-weight: 700; }
 .badge { font-size: .72rem; padding: 3px 8px; border-radius: 10px; text-align: center; }
