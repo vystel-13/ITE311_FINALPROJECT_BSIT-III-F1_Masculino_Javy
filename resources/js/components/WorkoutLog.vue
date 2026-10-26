@@ -307,6 +307,10 @@ watch(toast, (message) => {
           @repeat="repeatWorkout"
         />
       </ul>
+            <p v-else-if="searchText" class="hint">
+        No exercises match "{{ searchText }}".
+        <button class="link" @click="searchText = ''">Clear search</button>
+      </p>
       <p v-else class="hint">
         No workouts yet{{ filterMuscle !== 'All' ? ' for ' + filterMuscle : '' }}. Log your first exercise above.
       </p>
