@@ -165,9 +165,10 @@ function exportCsv() {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
-  link.download = 'workout-log.csv'
+    link.download = `workout-log-${new Date().toISOString().slice(0, 10)}.csv`
   link.click()
-  URL.revokeObjectURL(link.href)
+    URL.revokeObjectURL(link.href)
+  toast.value = `Exported ${workouts.value.length} workouts.`
 }
 
 function clearAll() {
@@ -205,7 +206,7 @@ watch(toast, (message) => {
         <p>{{ workouts.length }} exercise{{ workouts.length === 1 ? '' : 's' }} logged</p>
       </div>
             <div class="head__actions">
-        <button class="btn btn--ghost" @click="exportCsv">Export CSV</button>
+        <button class="btn btn--ghost" :disabled="!workouts.length" @click="exportCsv">Export CSV</button>
         <button class="btn btn--ghost" @click="toggleUnit">Units: {{ unit }}</button>
       </div>
     </header>
@@ -366,6 +367,7 @@ input.invalid { border-color: var(--red); background: #fff6f5; }
 .goal { display: flex; align-items: center; gap: 8px; font-size: .85rem; }
 .goal input { width: 110px; }
 .head__actions { display: flex; gap: 8px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
 .meter { height: 12px; background: #e3e7ec; margin: 6px 0; }
 .meter__fill { height: 100%; transition: width .4s; }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
