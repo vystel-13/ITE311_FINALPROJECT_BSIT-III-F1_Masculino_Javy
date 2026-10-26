@@ -1,7 +1,7 @@
 # Workout Log
 
-**Student Name:** [Masculino, Javy L.]
-**Course and Section:** ITE 311 – Web System and Technologies 2, [BSIT III - F1]
+**Student Name:** Masculino, Javy L.
+**Course and Section:** ITE 311 – Web System and Technologies 2, BSIT III - F1
 
 ## Project Description
 
@@ -15,6 +15,9 @@ Workout Log is a web app for tracking gym workouts. Users log each exercise with
 - Weekly volume goal with a progress bar
 - Volume breakdown by muscle group
 - Filter by muscle group and kg/lb unit toggle
+- Search workouts by exercise name (`feature/search`)
+- Optional notes on each exercise (`feature/notes`)
+- Export the workout log to a CSV file (`feature/export-csv`)
 
 ## Technologies Used
 
